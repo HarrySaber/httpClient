@@ -29,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.starpost.tms.client.utils.HttpClientUtil;
 import cn.starpost.tms.client.value.channel.FindChannelRequest;
 import cn.starpost.tms.client.value.channel.FindChannelResponse;
+import cn.starpost.tms.client.value.warehouse.FindOrderPrefixRequest;
+import cn.starpost.tms.client.value.warehouse.FindOrderPrefixResponse;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressRequest;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressResponse;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseRequest;
@@ -59,7 +61,7 @@ public class TmsClient {
 		try {
 			String url = baseUrl + "/api/owner-channel";
 			ObjectMapper objectMapper = new ObjectMapper();
-			logger.info(">>>>TmsClientChannel>findAllChannel url:{}", url);
+			logger.info(">>>>TmsClient>findAllChannel url:{}", url);
 			String json = objectMapper.writeValueAsString(request);
 			String response = HttpClientUtil.doPost(url, json);
 			if (!StringUtils.isBlank(response)) {
@@ -80,7 +82,7 @@ public class TmsClient {
 		try {
 			String url = baseUrl + "/api/owner-warehouse";
 			ObjectMapper objectMapper = new ObjectMapper();
-			logger.info(">>>>TmsClientWarehouse>findAllWarehouse url:{}", url);
+			logger.info(">>>>TmsClient>findAllWarehouse url:{}", url);
 			String json = objectMapper.writeValueAsString(request);
 			String response = HttpClientUtil.doPost(url, json);
 			if (!StringUtils.isBlank(response)) {
@@ -115,6 +117,28 @@ public class TmsClient {
 			return FindWarehouseAddressResponse.failed(e.getLocalizedMessage());
 		} catch (Exception e) {
 			return FindWarehouseAddressResponse.failed(e.getLocalizedMessage());
+
+		}
+	}
+
+	public FindOrderPrefixResponse findOrderPrefix(FindOrderPrefixRequest request) {
+		try {
+			String url = baseUrl + "/api/order-prefix";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient>findOrderPrefix url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, FindOrderPrefixResponse.class);
+			} else {
+				return FindOrderPrefixResponse.failed("response is blank");
+			}
+		} catch (JsonParseException e) {
+			return FindOrderPrefixResponse.failed(e.getLocalizedMessage());
+		} catch (JsonMappingException e) {
+			return FindOrderPrefixResponse.failed(e.getLocalizedMessage());
+		} catch (Exception e) {
+			return FindOrderPrefixResponse.failed(e.getLocalizedMessage());
 		}
 	}
 

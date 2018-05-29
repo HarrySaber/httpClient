@@ -29,8 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.starpost.tms.client.utils.HttpClientUtil;
 import cn.starpost.tms.client.value.channel.FindChannelRequest;
 import cn.starpost.tms.client.value.channel.FindChannelResponse;
-import cn.starpost.tms.client.value.provider.FindProviderRequest;
-import cn.starpost.tms.client.value.provider.FindProviderResponse;
+import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
+import cn.starpost.tms.client.value.provider.FindServiceProvideResponse;
 import cn.starpost.tms.client.value.warehouse.FindOrderPrefixRequest;
 import cn.starpost.tms.client.value.warehouse.FindOrderPrefixResponse;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressByWarehouseCodeRequest;
@@ -168,7 +168,7 @@ public class TmsClient {
 		}
 	}
 
-	public FindProviderResponse findProvider(FindProviderRequest request) {
+	public FindServiceProvideResponse findServiceProvide(FindServiceProvideRequest request) {
 		try {
 			String url = baseUrl + "/api/provider";
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -176,16 +176,16 @@ public class TmsClient {
 			String json = objectMapper.writeValueAsString(request);
 			String response = HttpClientUtil.doPost(url, json);
 			if (!StringUtils.isBlank(response)) {
-				return objectMapper.readValue(response, FindProviderResponse.class);
+				return objectMapper.readValue(response, FindServiceProvideResponse.class);
 			} else {
-				return FindProviderResponse.failed("response is blank");
+				return FindServiceProvideResponse.failed("response is blank");
 			}
 		} catch (JsonParseException e) {
-			return FindProviderResponse.failed(e.getLocalizedMessage());
+			return FindServiceProvideResponse.failed(e.getLocalizedMessage());
 		} catch (JsonMappingException e) {
-			return FindProviderResponse.failed(e.getLocalizedMessage());
+			return FindServiceProvideResponse.failed(e.getLocalizedMessage());
 		} catch (Exception e) {
-			return FindProviderResponse.failed(e.getLocalizedMessage());
+			return FindServiceProvideResponse.failed(e.getLocalizedMessage());
 		}
 	}
 }

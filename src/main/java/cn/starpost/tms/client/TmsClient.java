@@ -37,6 +37,8 @@ import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressByWarehouseCod
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressByWarehouseCodeResponse;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressRequest;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressResponse;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseByIdRequest;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseByIdResponse;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseRequest;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseResponse;
 
@@ -186,6 +188,28 @@ public class TmsClient {
 			return FindServiceProvideResponse.failed(e.getLocalizedMessage());
 		} catch (Exception e) {
 			return FindServiceProvideResponse.failed(e.getLocalizedMessage());
+		}
+	}
+
+	public FindWarehouseByIdResponse findWarehouseByIds(FindWarehouseByIdRequest request) {
+		try {
+			String url = baseUrl + "/api/warehouse/ids";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClientWarehouseAddress>findWarehouseById url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, FindWarehouseByIdResponse.class);
+			} else {
+				return FindWarehouseByIdResponse.failed("response is blank");
+			}
+		} catch (JsonParseException e) {
+			return FindWarehouseByIdResponse.failed(e.getLocalizedMessage());
+		} catch (JsonMappingException e) {
+			return FindWarehouseByIdResponse.failed(e.getLocalizedMessage());
+		} catch (Exception e) {
+			return FindWarehouseByIdResponse.failed(e.getLocalizedMessage());
+
 		}
 	}
 }

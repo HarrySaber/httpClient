@@ -31,6 +31,8 @@ import cn.starpost.tms.client.value.channel.FindChannelRequest;
 import cn.starpost.tms.client.value.channel.FindChannelResponse;
 import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
 import cn.starpost.tms.client.value.provider.FindServiceProvideResponse;
+import cn.starpost.tms.client.value.warehouse.FindAllFbaWarehouseRequest;
+import cn.starpost.tms.client.value.warehouse.FindAllFbaWarehouseResponse;
 import cn.starpost.tms.client.value.warehouse.FindOrderPrefixRequest;
 import cn.starpost.tms.client.value.warehouse.FindOrderPrefixResponse;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressByWarehouseCodeRequest;
@@ -209,6 +211,24 @@ public class TmsClient {
 			return FindWarehouseByIdResponse.failed(e.getLocalizedMessage());
 		} catch (Exception e) {
 			return FindWarehouseByIdResponse.failed(e.getLocalizedMessage());
+
+		}
+	}
+
+	public FindAllFbaWarehouseResponse findAllFbaWarehouse(FindAllFbaWarehouseRequest request) {
+		try {
+			String url = baseUrl + "/api/fba-warehouse";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient findAllFbaWarehouse>FindAllFbaWarehouseRequest url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, FindAllFbaWarehouseResponse.class);
+			} else {
+				return FindAllFbaWarehouseResponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			return FindAllFbaWarehouseResponse.failed(e.getLocalizedMessage());
 
 		}
 	}

@@ -29,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cn.starpost.tms.client.utils.HttpClientUtil;
 import cn.starpost.tms.client.value.channel.FindChannelRequest;
 import cn.starpost.tms.client.value.channel.FindChannelResponse;
+import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfRequest;
+import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfResponse;
 import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
 import cn.starpost.tms.client.value.provider.FindServiceProvideResponse;
 import cn.starpost.tms.client.value.warehouse.FindAllFbaWarehouseRequest;
@@ -229,6 +231,24 @@ public class TmsClient {
 			}
 		} catch (Exception e) {
 			return FindAllFbaWarehouseResponse.failed(e.getLocalizedMessage());
+
+		}
+	}
+
+	public GetCartonLabelPdfResponse getCartonLabelPdf(GetCartonLabelPdfRequest request) {
+		try {
+			String url = baseUrl + "/api/cartonlabel";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient getCartonLabelPdf>GetCartonLabelPdfRequest url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, GetCartonLabelPdfResponse.class);
+			} else {
+				return GetCartonLabelPdfResponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			return GetCartonLabelPdfResponse.failed(e.getLocalizedMessage());
 
 		}
 	}

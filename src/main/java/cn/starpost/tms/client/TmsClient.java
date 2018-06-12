@@ -36,7 +36,7 @@ import cn.starpost.tms.client.value.provider.FindServiceProvideResponse;
 import cn.starpost.tms.client.value.warehouse.FindAllFbaWarehouseRequest;
 import cn.starpost.tms.client.value.warehouse.FindAllFbaWarehouseResponse;
 import cn.starpost.tms.client.value.warehouse.FindOrderPrefixRequest;
-import cn.starpost.tms.client.value.warehouse.FindOrderPrefixResponse;
+import cn.starpost.tms.client.value.warehouse.FindOrderIdResponse;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressByWarehouseCodeRequest;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressByWarehouseCodeResponse;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressRequest;
@@ -153,7 +153,7 @@ public class TmsClient {
 		}
 	}
 
-	public FindOrderPrefixResponse findOrderPrefix(FindOrderPrefixRequest request) {
+	public FindOrderIdResponse findOrderPrefix(FindOrderPrefixRequest request) {
 		try {
 			String url = baseUrl + "/api/order-prefix";
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -161,16 +161,16 @@ public class TmsClient {
 			String json = objectMapper.writeValueAsString(request);
 			String response = HttpClientUtil.doPost(url, json);
 			if (!StringUtils.isBlank(response)) {
-				return objectMapper.readValue(response, FindOrderPrefixResponse.class);
+				return objectMapper.readValue(response, FindOrderIdResponse.class);
 			} else {
-				return FindOrderPrefixResponse.failed("response is blank");
+				return FindOrderIdResponse.failed("response is blank");
 			}
 		} catch (JsonParseException e) {
-			return FindOrderPrefixResponse.failed(e.getLocalizedMessage());
+			return FindOrderIdResponse.failed(e.getLocalizedMessage());
 		} catch (JsonMappingException e) {
-			return FindOrderPrefixResponse.failed(e.getLocalizedMessage());
+			return FindOrderIdResponse.failed(e.getLocalizedMessage());
 		} catch (Exception e) {
-			return FindOrderPrefixResponse.failed(e.getLocalizedMessage());
+			return FindOrderIdResponse.failed(e.getLocalizedMessage());
 		}
 	}
 

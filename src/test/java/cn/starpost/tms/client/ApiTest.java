@@ -18,14 +18,15 @@
  */
 package cn.starpost.tms.client;
 
-import org.junit.Test;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Arrays;
+import java.util.Date;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cn.starpost.tms.client.value.channel.FindChannelRequest;
-import cn.starpost.tms.client.value.channel.FindChannelResponse;
-import cn.starpost.tms.client.value.warehouse.FindWarehouseRequest;
-import cn.starpost.tms.client.value.warehouse.FindWarehouseResponse;
+import cn.starpost.tms.client.value.charge.GetOrderChargeBillRequest;
+import cn.starpost.tms.client.value.charge.GetOrderChargeBillResponse;
 
 /**
  * @author dongjianpeng
@@ -34,15 +35,43 @@ import cn.starpost.tms.client.value.warehouse.FindWarehouseResponse;
 public class ApiTest {
 	final static String baseUrl = "http://localhost:9003";
 
-	@Test
+	// @Test
 	public void testChannel() {
-		TmsClient tmsClient = new TmsClient(baseUrl);
-		ObjectMapper mapper = new ObjectMapper();
-//		FindChannelResponse findAllChannel = tmsClient
-//				.findAllChannel(new FindChannelRequest("b47f5f3a-c2b4-483d-94f4-9dd0b508700d"));
-//		System.out.println(mapper.valueToTree(findAllChannel));
-//		FindWarehouseResponse findAllWarehouse = tmsClient
-//				.findAllWarehouse(new FindWarehouseRequest("b47f5f3a-c2b4-483d-94f4-9dd0b508700d"));
-//		System.out.println(mapper.valueToTree(findAllWarehouse));
+		try {
+
+			TmsClient tmsClient = new TmsClient(baseUrl);
+			ObjectMapper mapper = new ObjectMapper();
+			// FindChannelResponse findAllChannel = tmsClient
+			// .findAllChannel(new
+			// FindChannelRequest("b47f5f3a-c2b4-483d-94f4-9dd0b508700d"));
+			// System.out.println(mapper.valueToTree(findAllChannel));
+			// FindWarehouseResponse findAllWarehouse = tmsClient
+			// .findAllWarehouse(new
+			// FindWarehouseRequest("b47f5f3a-c2b4-483d-94f4-9dd0b508700d"));
+			// System.out.println(mapper.valueToTree(findAllWarehouse));
+
+			GetOrderChargeBillResponse getOrderChargeBillByTxIds = tmsClient
+					.GetOrderChargeBillByTxIds(new GetOrderChargeBillRequest(
+							Arrays.asList("384b318a-b7a4-4a16-b6fc-0789da10eda7",
+									"8c5fb194-5541-4ce7-b15e-f3156a1ae51c", "40b88c9d-a541-4ad7-96b3-0dd7eeef0ec2"),
+							"c31be593-975b-4f15-a17f-98beb5aeeba0", new Date(), new Date()));
+
+			if (getOrderChargeBillByTxIds.isSucceed()) {
+				String path = this.getClass().getResource("/").getPath();
+				System.out.println(path);
+				File file = new File(path + "/bill.xlsx");
+				if (!file.exists()) {
+					file.createNewFile();
+				}
+				FileOutputStream fos = new FileOutputStream(file);
+				fos.write(getOrderChargeBillByTxIds.getOrderChargeBill());
+				fos.flush();
+				System.out.println("成功");
+			} else {
+				System.err.println(getOrderChargeBillByTxIds.getMessage());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

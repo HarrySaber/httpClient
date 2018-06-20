@@ -31,6 +31,8 @@ import cn.starpost.tms.client.value.channel.FindChannelRequest;
 import cn.starpost.tms.client.value.channel.FindChannelResponse;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsRequest;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsResponse;
+import cn.starpost.tms.client.value.charge.GetOrderChargeBillRequest;
+import cn.starpost.tms.client.value.charge.GetOrderChargeBillResponse;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfRequest;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfResponse;
 import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
@@ -254,7 +256,7 @@ public class TmsClient {
 
 		}
 	}
-	
+
 	public FindChargeByOrderIdsResponse findChargeByOrderIds(FindChargeByOrderIdsRequest request) {
 		try {
 			String url = baseUrl + "/api/charge";
@@ -269,7 +271,28 @@ public class TmsClient {
 			}
 		} catch (Exception e) {
 			return FindChargeByOrderIdsResponse.failed(e.getLocalizedMessage());
-			
+
+		}
+	}
+
+	/**
+	 * 获取账单Excel
+	 */
+	public GetOrderChargeBillResponse GetOrderChargeBillByTxIds(GetOrderChargeBillRequest request) {
+		try {
+			String url = baseUrl + "/api/order-charge-bill";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient GetOrderChargeBillByTxIds>GetOrderChargeBillRequest url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, GetOrderChargeBillResponse.class);
+			} else {
+				return GetOrderChargeBillResponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			return GetOrderChargeBillResponse.failed(e.getLocalizedMessage());
+
 		}
 	}
 }

@@ -51,7 +51,7 @@ public class ApiTest {
 			// System.out.println(mapper.valueToTree(findAllWarehouse));
 
 			GetOrderChargeBillResponse getOrderChargeBillByTxIds = tmsClient
-					.GetOrderChargeBillByTxIds(new GetOrderChargeBillRequest(
+					.getOrderChargeBillByTxIds(new GetOrderChargeBillRequest(
 							Arrays.asList("384b318a-b7a4-4a16-b6fc-0789da10eda7",
 									"8c5fb194-5541-4ce7-b15e-f3156a1ae51c", "40b88c9d-a541-4ad7-96b3-0dd7eeef0ec2"),
 							"c31be593-975b-4f15-a17f-98beb5aeeba0", new Date(), new Date()));

@@ -278,7 +278,7 @@ public class TmsClient {
 	/**
 	 * 获取账单Excel
 	 */
-	public GetOrderChargeBillResponse GetOrderChargeBillByTxIds(GetOrderChargeBillRequest request) {
+	public GetOrderChargeBillResponse getOrderChargeBillByTxIds(GetOrderChargeBillRequest request) {
 		try {
 			String url = baseUrl + "/api/order-charge-bill";
 			ObjectMapper objectMapper = new ObjectMapper();

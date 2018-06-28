@@ -25,6 +25,8 @@ import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsRequest;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsResponse;
 import cn.starpost.tms.client.value.charge.GetOrderChargeBillRequest;
 import cn.starpost.tms.client.value.charge.GetOrderChargeBillResponse;
+import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeRequest;
+import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeResponse;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfRequest;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfResponse;
 import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
@@ -302,6 +304,25 @@ public class TmsClient {
 			}
 		} catch (Exception e) {
 			return new FindSortResponse(0,false,"system error");
+
+		}
+	}
+
+
+	public GetOrderNumberAndChannelCodeResponse getOrderNumberAndChannelCode(GetOrderNumberAndChannelCodeRequest request){
+		try {
+			String url = baseUrl + "/api/getOrderNumberAndChannelCode";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient getOrderNumberAndChannelCode url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, GetOrderNumberAndChannelCodeResponse.class);
+			} else {
+				return new GetOrderNumberAndChannelCodeResponse(false, null, null, null, 0, 0,"system error");
+			}
+		} catch (Exception e) {
+			return new GetOrderNumberAndChannelCodeResponse(false, null, null, null, 0, 0,"system error");
 
 		}
 	}

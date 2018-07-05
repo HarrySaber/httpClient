@@ -33,6 +33,8 @@ import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
 import cn.starpost.tms.client.value.provider.FindServiceProvideResponse;
 import cn.starpost.tms.client.value.sort.FindSortRequest;
 import cn.starpost.tms.client.value.sort.FindSortResponse;
+import cn.starpost.tms.client.value.transaction.GetOrderTransactionRequest;
+import cn.starpost.tms.client.value.transaction.GetOrderTransactionResponse;
 import cn.starpost.tms.client.value.warehouse.*;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -300,16 +302,16 @@ public class TmsClient {
 			if (!StringUtils.isBlank(response)) {
 				return objectMapper.readValue(response, FindSortResponse.class);
 			} else {
-				return new FindSortResponse(0,false,"system error");
+				return new FindSortResponse(0, false, "system error");
 			}
 		} catch (Exception e) {
-			return new FindSortResponse(0,false,"system error");
+			return new FindSortResponse(0, false, "system error");
 
 		}
 	}
 
-
-	public GetOrderNumberAndChannelCodeResponse getOrderNumberAndChannelCode(GetOrderNumberAndChannelCodeRequest request){
+	public GetOrderNumberAndChannelCodeResponse getOrderNumberAndChannelCode(
+			GetOrderNumberAndChannelCodeRequest request) {
 		try {
 			String url = baseUrl + "/api/getOrderNumberAndChannelCode";
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -319,10 +321,34 @@ public class TmsClient {
 			if (!StringUtils.isBlank(response)) {
 				return objectMapper.readValue(response, GetOrderNumberAndChannelCodeResponse.class);
 			} else {
-				return new GetOrderNumberAndChannelCodeResponse(false, null, null, null, 0, 0,"system error");
+				return new GetOrderNumberAndChannelCodeResponse(false, null, null, null, 0, 0, "system error");
 			}
 		} catch (Exception e) {
-			return new GetOrderNumberAndChannelCodeResponse(false, null, null, null, 0, 0,"system error");
+			return new GetOrderNumberAndChannelCodeResponse(false, null, null, null, 0, 0, "system error");
+
+		}
+	}
+
+	/**
+	 * 导出交易流水服务扣款
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public GetOrderTransactionResponse getOrderTransactionByTxId(GetOrderTransactionRequest request) {
+		try {
+			String url = baseUrl + "/api/order-transaction";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient getOrderTransactionByTxId url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, GetOrderTransactionResponse.class);
+			} else {
+				return GetOrderTransactionResponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			return GetOrderTransactionResponse.failed(e.getMessage());
 
 		}
 	}

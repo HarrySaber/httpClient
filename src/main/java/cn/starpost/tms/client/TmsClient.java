@@ -18,12 +18,19 @@
  */
 package cn.starpost.tms.client;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import cn.starpost.tms.client.utils.HttpClientUtil;
 import cn.starpost.tms.client.value.channel.FindChannelRequest;
 import cn.starpost.tms.client.value.channel.FindChannelResponse;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsRequest;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsResponse;
-import cn.starpost.tms.client.value.charge.GetOrderChargeBillRequest;
 import cn.starpost.tms.client.value.charge.GetOrderChargeBillResponse;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeRequest;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeResponse;
@@ -33,15 +40,21 @@ import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
 import cn.starpost.tms.client.value.provider.FindServiceProvideResponse;
 import cn.starpost.tms.client.value.sort.FindSortRequest;
 import cn.starpost.tms.client.value.sort.FindSortResponse;
+import cn.starpost.tms.client.value.transaction.ExportBillRequest;
 import cn.starpost.tms.client.value.transaction.GetOrderTransactionRequest;
 import cn.starpost.tms.client.value.transaction.GetOrderTransactionResponse;
-import cn.starpost.tms.client.value.warehouse.*;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cn.starpost.tms.client.value.warehouse.FindAllFbaWarehouseRequest;
+import cn.starpost.tms.client.value.warehouse.FindAllFbaWarehouseResponse;
+import cn.starpost.tms.client.value.warehouse.FindOrderIdResponse;
+import cn.starpost.tms.client.value.warehouse.FindOrderPrefixRequest;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressByWarehouseCodeRequest;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressByWarehouseCodeResponse;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressRequest;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseAddressResponse;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseByIdRequest;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseByIdResponse;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseRequest;
+import cn.starpost.tms.client.value.warehouse.FindWarehouseResponse;
 
 /**
  * @author dongjianpeng
@@ -271,7 +284,7 @@ public class TmsClient {
 	/**
 	 * 获取账单Excel
 	 */
-	public GetOrderChargeBillResponse getOrderChargeBillByTxIds(GetOrderChargeBillRequest request) {
+	public GetOrderChargeBillResponse getOrderChargeBillByTxIds(ExportBillRequest request) {
 		try {
 			String url = baseUrl + "/api/order-charge-bill";
 			ObjectMapper objectMapper = new ObjectMapper();

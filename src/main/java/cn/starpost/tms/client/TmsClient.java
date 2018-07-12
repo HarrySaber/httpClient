@@ -32,6 +32,8 @@ import cn.starpost.tms.client.value.channel.FindChannelResponse;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsRequest;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsResponse;
 import cn.starpost.tms.client.value.charge.GetOrderChargeBillResponse;
+import cn.starpost.tms.client.value.charge.QueryOrderChargeRequest;
+import cn.starpost.tms.client.value.charge.QueryOrderChargeResponse;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeRequest;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeResponse;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfRequest;
@@ -362,6 +364,25 @@ public class TmsClient {
 			}
 		} catch (Exception e) {
 			return GetOrderTransactionResponse.failed(e.getMessage());
+
+		}
+	}
+
+	public QueryOrderChargeResponse getOrderCharge(QueryOrderChargeRequest request) {
+		try {
+			String url = baseUrl + "/api/order-charge-list";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient getOrderCharge url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient getOrderCharge response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, QueryOrderChargeResponse.class);
+			} else {
+				return QueryOrderChargeResponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			return QueryOrderChargeResponse.failed(e.getMessage());
 
 		}
 	}

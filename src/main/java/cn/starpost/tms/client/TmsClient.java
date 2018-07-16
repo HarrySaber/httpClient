@@ -36,6 +36,8 @@ import cn.starpost.tms.client.value.charge.QueryOrderChargeRequest;
 import cn.starpost.tms.client.value.charge.QueryOrderChargeResponse;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeRequest;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeResponse;
+import cn.starpost.tms.client.value.order.OrderConfirmDeliveryRequest;
+import cn.starpost.tms.client.value.order.OrderConfirmDeliveryResponse;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfRequest;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfResponse;
 import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
@@ -383,6 +385,26 @@ public class TmsClient {
 			}
 		} catch (Exception e) {
 			return QueryOrderChargeResponse.failed(e.getMessage());
+
+		}
+	}
+
+	public OrderConfirmDeliveryResponse confirmDelivery(OrderConfirmDeliveryRequest request) {
+		try {
+			String url = baseUrl + "/api/order/confirm-delivery";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient confirmDelivery url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient confirmDelivery response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, OrderConfirmDeliveryResponse.class);
+			} else {
+				return OrderConfirmDeliveryResponse.failed("response is blank", request.getOrderId());
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient confirmDelivery error :", e);
+			return OrderConfirmDeliveryResponse.failed(e.getMessage(), request.getOrderId());
 
 		}
 	}

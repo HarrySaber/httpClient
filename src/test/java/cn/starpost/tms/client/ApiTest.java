@@ -26,6 +26,7 @@ import java.util.Date;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.starpost.tms.client.value.charge.GetOrderChargeBillResponse;
+import cn.starpost.tms.client.value.transaction.DepositDetail;
 import cn.starpost.tms.client.value.transaction.ExportBillDetial;
 import cn.starpost.tms.client.value.transaction.ExportBillRequest;
 
@@ -52,7 +53,8 @@ public class ApiTest {
 			// System.out.println(mapper.valueToTree(findAllWarehouse));
 
 			GetOrderChargeBillResponse getOrderChargeBillByTxIds = tmsClient
-					.getOrderChargeBillByTxIds(new ExportBillRequest(
+					.getOrderChargeBillByTxIds(new ExportBillRequest(Arrays.asList(new DepositDetail(1d, new Date())),
+							Arrays.asList(new ExportBillDetial("384b318a-b7a4-4a16-b6fc-0789da10eda7", 1d)),
 							Arrays.asList(new ExportBillDetial("384b318a-b7a4-4a16-b6fc-0789da10eda7", 1d)),
 							"40b88c9d-a541-4ad7-96b3-0dd7eeef0ec2", new Date(), new Date()));
 

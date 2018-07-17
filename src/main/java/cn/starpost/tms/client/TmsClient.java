@@ -36,6 +36,8 @@ import cn.starpost.tms.client.value.charge.QueryOrderChargeRequest;
 import cn.starpost.tms.client.value.charge.QueryOrderChargeResponse;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeRequest;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeResponse;
+import cn.starpost.tms.client.value.order.OrderCancelRequest;
+import cn.starpost.tms.client.value.order.OrderCancelResponse;
 import cn.starpost.tms.client.value.order.OrderConfirmDeliveryRequest;
 import cn.starpost.tms.client.value.order.OrderConfirmDeliveryResponse;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfRequest;
@@ -389,6 +391,14 @@ public class TmsClient {
 		}
 	}
 
+	/**
+	 * 客户确认发货
+	 * 
+	 * @param request
+	 * @return
+	 *
+	 * @author renxiangyang
+	 */
 	public OrderConfirmDeliveryResponse confirmDelivery(OrderConfirmDeliveryRequest request) {
 		try {
 			String url = baseUrl + "/api/order/confirm-delivery";
@@ -405,7 +415,33 @@ public class TmsClient {
 		} catch (Exception e) {
 			logger.error("TmsClient confirmDelivery error :", e);
 			return OrderConfirmDeliveryResponse.failed(e.getMessage(), request.getOrderId());
+		}
+	}
 
+	/**
+	 * 订单取消
+	 * 
+	 * @param request
+	 * @return
+	 *
+	 * @author renxiangyang
+	 */
+	public OrderCancelResponse cancelOrder(OrderCancelRequest request) {
+		try {
+			String url = baseUrl + "/api/order-cancel";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient cancelOrder url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient cancelOrder response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, OrderCancelResponse.class);
+			} else {
+				return OrderCancelResponse.failed("response is blank", request.getOrderId());
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient confirmDelivery error :", e);
+			return OrderCancelResponse.failed(e.getMessage(), request.getOrderId());
 		}
 	}
 }

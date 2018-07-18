@@ -437,11 +437,11 @@ public class TmsClient {
 			if (!StringUtils.isBlank(response)) {
 				return objectMapper.readValue(response, OrderCancelResponse.class);
 			} else {
-				return OrderCancelResponse.failed("response is blank", request.getOrderId());
+				return OrderCancelResponse.failed("response is blank", request.getOrderId(), request.getRefNumber());
 			}
 		} catch (Exception e) {
 			logger.error("TmsClient confirmDelivery error :", e);
-			return OrderCancelResponse.failed(e.getMessage(), request.getOrderId());
+			return OrderCancelResponse.failed(e.getMessage(), request.getOrderId(), request.getRefNumber());
 		}
 	}
 }

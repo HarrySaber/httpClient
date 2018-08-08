@@ -391,6 +391,25 @@ public class TmsClient {
 
         }
     }
+    
+    public QueryOrderChargeResponse getAllOrderCharge(QueryOrderChargeRequest request) {
+    	try {
+    		String url = baseUrl + "/api/order-charge-all-list";
+    		ObjectMapper objectMapper = new ObjectMapper();
+    		logger.info(">>>>TmsClient getOrderCharge url:{}", url);
+    		String json = objectMapper.writeValueAsString(request);
+    		String response = HttpClientUtil.doPost(url, json);
+    		logger.info(">>>>TmsClient getOrderCharge response:{}", response);
+    		if (!StringUtils.isBlank(response)) {
+    			return objectMapper.readValue(response, QueryOrderChargeResponse.class);
+    		} else {
+    			return QueryOrderChargeResponse.failed("response is blank");
+    		}
+    	} catch (Exception e) {
+    		return QueryOrderChargeResponse.failed(e.getMessage());
+    		
+    	}
+    }
 
     /**
      * 客户确认发货

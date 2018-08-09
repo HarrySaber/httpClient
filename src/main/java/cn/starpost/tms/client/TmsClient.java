@@ -17,6 +17,7 @@
  */
 package cn.starpost.tms.client;
 
+import cn.starpost.tms.client.value.order.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +38,6 @@ import cn.starpost.tms.client.value.lastmilelabel.GetLastMileLabelRequest;
 import cn.starpost.tms.client.value.lastmilelabel.GetLastMileLabelResponse;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeRequest;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeResponse;
-import cn.starpost.tms.client.value.order.OrderCancelRequest;
-import cn.starpost.tms.client.value.order.OrderCancelResponse;
-import cn.starpost.tms.client.value.order.OrderConfirmDeliveryRequest;
-import cn.starpost.tms.client.value.order.OrderConfirmDeliveryResponse;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfRequest;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfResponse;
 import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
@@ -462,6 +459,30 @@ public class TmsClient {
         } catch (Exception e) {
             logger.error("TmsClient getLastMileLabel error :", e);
             return GetLastMileLabelResponse.failed(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询订单状态
+     * @param request
+     * @return
+     */
+    public OrderStatusResponse getOrderStatus(OrderStatusRequest request) {
+        try {
+            String url = baseUrl + "/api/order-status";
+            ObjectMapper objectMapper = new ObjectMapper();
+            logger.info(">>>>TmsClient getOrderStatus url:{}", url);
+            String json = objectMapper.writeValueAsString(request);
+            String response = HttpClientUtil.doPost(url, json);
+            logger.info(">>>>TmsClient getOrderStatus response:{}", response);
+            if (!StringUtils.isBlank(response)) {
+                return objectMapper.readValue(response, OrderStatusResponse.class);
+            } else {
+                return OrderStatusResponse.failed("response is blank");
+            }
+        } catch (Exception e) {
+            logger.error("TmsClient getOrderStatus error :", e);
+            return OrderStatusResponse.failed(e.getMessage());
         }
     }
 }

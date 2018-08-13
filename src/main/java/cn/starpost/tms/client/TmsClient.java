@@ -17,7 +17,6 @@
  */
 package cn.starpost.tms.client;
 
-import cn.starpost.tms.client.value.order.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +37,20 @@ import cn.starpost.tms.client.value.lastmilelabel.GetLastMileLabelRequest;
 import cn.starpost.tms.client.value.lastmilelabel.GetLastMileLabelResponse;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeRequest;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeResponse;
+import cn.starpost.tms.client.value.order.OrderCancelRequest;
+import cn.starpost.tms.client.value.order.OrderCancelResponse;
+import cn.starpost.tms.client.value.order.OrderConfirmDeliveryRequest;
+import cn.starpost.tms.client.value.order.OrderConfirmDeliveryResponse;
+import cn.starpost.tms.client.value.order.OrderStatusRequest;
+import cn.starpost.tms.client.value.order.OrderStatusResponse;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfRequest;
 import cn.starpost.tms.client.value.pdf.GetCartonLabelPdfResponse;
 import cn.starpost.tms.client.value.provider.FindServiceProvideRequest;
 import cn.starpost.tms.client.value.provider.FindServiceProvideResponse;
 import cn.starpost.tms.client.value.sort.FindSortRequest;
 import cn.starpost.tms.client.value.sort.FindSortResponse;
+import cn.starpost.tms.client.value.staff.FindStaffRequest;
+import cn.starpost.tms.client.value.staff.FindStaffResponse;
 import cn.starpost.tms.client.value.transaction.ExportBillRequest;
 import cn.starpost.tms.client.value.transaction.GetOrderTransactionRequest;
 import cn.starpost.tms.client.value.transaction.GetOrderTransactionResponse;
@@ -65,10 +72,8 @@ import cn.starpost.tms.client.value.warehouse.FindWarehouseResponse;
  *
  */
 public class TmsClient {
-    public static final Logger logger = LoggerFactory.getLogger(TmsClient.class);
-
+	public static final Logger logger = LoggerFactory.getLogger(TmsClient.class);
     final String baseUrl;
-
     public TmsClient(String baseUrl) {
         if (!StringUtils.isBlank(baseUrl)) {
             if (baseUrl.endsWith("/")) {
@@ -80,7 +85,6 @@ public class TmsClient {
             throw new IllegalArgumentException("baseUrl is blank");
         }
     }
-
     public FindChannelResponse findAllChannel(FindChannelRequest request) {
         try {
             String url = baseUrl + "/api/owner-channel";
@@ -101,7 +105,6 @@ public class TmsClient {
             return FindChannelResponse.failed(e.getLocalizedMessage());
         }
     }
-
     public FindWarehouseResponse findAllWarehouse(FindWarehouseRequest request) {
         try {
             String url = baseUrl + "/api/owner-warehouse";
@@ -122,7 +125,6 @@ public class TmsClient {
             return FindWarehouseResponse.failed(e.getLocalizedMessage());
         }
     }
-
     public FindWarehouseAddressResponse findWarehouseAddressCode(FindWarehouseAddressRequest request) {
         try {
             String url = baseUrl + "/api/warehouse-address";
@@ -143,7 +145,6 @@ public class TmsClient {
             return FindWarehouseAddressResponse.failed(e.getLocalizedMessage());
         }
     }
-
     public FindWarehouseAddressByWarehouseCodeResponse findWarehouseAddressByWarehouseCode(
             FindWarehouseAddressByWarehouseCodeRequest request) {
         try {
@@ -163,10 +164,8 @@ public class TmsClient {
             return FindWarehouseAddressByWarehouseCodeResponse.failed(e.getLocalizedMessage());
         } catch (Exception e) {
             return FindWarehouseAddressByWarehouseCodeResponse.failed(e.getLocalizedMessage());
-
         }
     }
-
     public FindOrderIdResponse findOrderPrefix(FindOrderPrefixRequest request) {
         try {
             String url = baseUrl + "/api/order-prefix";
@@ -187,7 +186,6 @@ public class TmsClient {
             return FindOrderIdResponse.failed(e.getLocalizedMessage());
         }
     }
-
     public FindServiceProvideResponse findServiceProvide(FindServiceProvideRequest request) {
         try {
             String url = baseUrl + "/api/provider";
@@ -208,7 +206,6 @@ public class TmsClient {
             return FindServiceProvideResponse.failed(e.getLocalizedMessage());
         }
     }
-
     public FindWarehouseByIdResponse findWarehouseByIds(FindWarehouseByIdRequest request) {
         try {
             String url = baseUrl + "/api/warehouse/ids";
@@ -227,10 +224,8 @@ public class TmsClient {
             return FindWarehouseByIdResponse.failed(e.getLocalizedMessage());
         } catch (Exception e) {
             return FindWarehouseByIdResponse.failed(e.getLocalizedMessage());
-
         }
     }
-
     public FindAllFbaWarehouseResponse findAllFbaWarehouse(FindAllFbaWarehouseRequest request) {
         try {
             String url = baseUrl + "/api/fba-warehouse";
@@ -245,10 +240,8 @@ public class TmsClient {
             }
         } catch (Exception e) {
             return FindAllFbaWarehouseResponse.failed(e.getLocalizedMessage());
-
         }
     }
-
     public GetCartonLabelPdfResponse getCartonLabelPdf(GetCartonLabelPdfRequest request) {
         try {
             String url = baseUrl + "/api/cartonlabel";
@@ -263,10 +256,8 @@ public class TmsClient {
             }
         } catch (Exception e) {
             return GetCartonLabelPdfResponse.failed(e.getLocalizedMessage());
-
         }
     }
-
     public FindChargeByOrderIdsResponse findChargeByOrderIds(FindChargeByOrderIdsRequest request) {
         try {
             String url = baseUrl + "/api/charge";
@@ -281,10 +272,8 @@ public class TmsClient {
             }
         } catch (Exception e) {
             return FindChargeByOrderIdsResponse.failed(e.getLocalizedMessage());
-
         }
     }
-
     /**
      * 获取账单Excel
      */
@@ -302,10 +291,8 @@ public class TmsClient {
             }
         } catch (Exception e) {
             return GetOrderChargeBillResponse.failed(e.getLocalizedMessage());
-
         }
     }
-
     /**
      * 获取分拣机端口
      */
@@ -323,10 +310,8 @@ public class TmsClient {
             }
         } catch (Exception e) {
             return new FindSortResponse(0, false, "system error");
-
         }
     }
-
     public GetOrderNumberAndChannelCodeResponse getOrderNumberAndChannelCode(
             GetOrderNumberAndChannelCodeRequest request) {
         try {
@@ -342,10 +327,8 @@ public class TmsClient {
             }
         } catch (Exception e) {
             return new GetOrderNumberAndChannelCodeResponse(false, null, null, null, 0, 0, "system error");
-
         }
     }
-
     /**
      * 导出交易流水服务扣款
      *
@@ -366,10 +349,8 @@ public class TmsClient {
             }
         } catch (Exception e) {
             return GetOrderTransactionResponse.failed(e.getMessage());
-
         }
     }
-
     public QueryOrderChargeResponse getOrderCharge(QueryOrderChargeRequest request) {
         try {
             String url = baseUrl + "/api/order-charge-list";
@@ -385,7 +366,6 @@ public class TmsClient {
             }
         } catch (Exception e) {
             return QueryOrderChargeResponse.failed(e.getMessage());
-
         }
     }
     
@@ -407,7 +387,6 @@ public class TmsClient {
     		
     	}
     }
-
     /**
      * 客户确认发货
      *
@@ -434,7 +413,6 @@ public class TmsClient {
             return OrderConfirmDeliveryResponse.failed(e.getMessage(), request.getOrderId());
         }
     }
-
     /**
      * 订单取消
      *
@@ -461,7 +439,6 @@ public class TmsClient {
             return OrderCancelResponse.failed(e.getMessage(), request.getOrderId(), request.getRefNumber());
         }
     }
-
     public GetLastMileLabelResponse getLastMileLabel(GetLastMileLabelRequest request) {
         try {
             String url = baseUrl + "/api/download-labelContent";
@@ -480,7 +457,6 @@ public class TmsClient {
             return GetLastMileLabelResponse.failed(e.getMessage());
         }
     }
-
     /**
      * 查询订单状态
      * @param request
@@ -504,4 +480,23 @@ public class TmsClient {
             return OrderStatusResponse.failed(e.getMessage());
         }
     }
+
+	public FindStaffResponse getSalesman(FindStaffRequest request) {
+		try {
+			String url = baseUrl + "/api/query/salesman";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient getSalesman url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient getSalesman response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, FindStaffResponse.class);
+			} else {
+				return FindStaffResponse.faile("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient getSalesman error :", e);
+			return FindStaffResponse.faile(e.getMessage());
+		}
+	}
 }

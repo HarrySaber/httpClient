@@ -32,6 +32,8 @@ import cn.starpost.tms.client.value.channel.FindChannelResponse;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsRequest;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsResponse;
 import cn.starpost.tms.client.value.charge.GetOrderChargeBillResponse;
+import cn.starpost.tms.client.value.charge.GetOrderTransactionDetailRequest;
+import cn.starpost.tms.client.value.charge.GetOrderTransactionDetailResponse;
 import cn.starpost.tms.client.value.charge.QueryOrderChargeRequest;
 import cn.starpost.tms.client.value.charge.QueryOrderChargeResponse;
 import cn.starpost.tms.client.value.lastmilelabel.GetLastMileLabelRequest;
@@ -541,6 +543,25 @@ public class TmsClient {
 		} catch (Exception e) {
 			logger.error("TmsClient batchConfirmOrder error :", e);
 			return new BatchOrderConfirmDeliveryResponse(false, e.getMessage(), null);
+		}
+	}
+
+	public GetOrderTransactionDetailResponse getOrderTransactionDetail(GetOrderTransactionDetailRequest request) {
+		try {
+			String url = baseUrl + "/api/order-transaction-detail";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient getOrderTransactionDetail url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient getOrderTransactionDetail response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, GetOrderTransactionDetailResponse.class);
+			} else {
+				return GetOrderTransactionDetailResponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			return GetOrderTransactionDetailResponse.failed(e.getMessage());
+
 		}
 	}
 }

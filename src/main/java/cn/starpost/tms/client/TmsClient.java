@@ -17,6 +17,8 @@
  */
 package cn.starpost.tms.client;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.starpost.tms.client.utils.HttpClientUtil;
+import cn.starpost.tms.client.value.api.pp.FindOrderNumberReponse;
+import cn.starpost.tms.client.value.api.pp.FindOrderNumberRequest;
+import cn.starpost.tms.client.value.api.pp.FindParcelLabelReponse;
 import cn.starpost.tms.client.value.channel.FindChannelRequest;
 import cn.starpost.tms.client.value.channel.FindChannelResponse;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsRequest;
@@ -74,7 +79,6 @@ import cn.starpost.tms.client.value.warehouse.FindWarehouseResponse;
 
 /**
  * @author dongjianpeng
- *
  */
 public class TmsClient {
 	public static final Logger logger = LoggerFactory.getLogger(TmsClient.class);
@@ -414,7 +418,6 @@ public class TmsClient {
 	 *
 	 * @param request
 	 * @return
-	 *
 	 * @author renxiangyang
 	 */
 	public OrderConfirmDeliveryResponse confirmDelivery(OrderConfirmDeliveryRequest request) {
@@ -441,7 +444,6 @@ public class TmsClient {
 	 *
 	 * @param request
 	 * @return
-	 *
 	 * @author renxiangyang
 	 */
 	public OrderCancelResponse cancelOrder(OrderCancelRequest request) {
@@ -484,7 +486,7 @@ public class TmsClient {
 
 	/**
 	 * 查询订单状态
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -562,6 +564,46 @@ public class TmsClient {
 		} catch (Exception e) {
 			return GetOrderTransactionDetailResponse.failed(e.getMessage());
 
+		}
+	}
+
+	public FindParcelLabelReponse findParcelLabel(List<String> orderIds) {
+		try {
+			String url = baseUrl + "/api/pp/find-label";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient findPacketPrintLabel url:{}", url);
+			String json = objectMapper.writeValueAsString(orderIds);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient findPacketLabel response:{}", response);
+			if (StringUtils.isNotBlank(response)) {
+				return objectMapper.readValue(response, new TypeReference<FindParcelLabelReponse>() {
+				});
+			} else {
+				return FindParcelLabelReponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient findPacketLabel error :", e);
+			return FindParcelLabelReponse.failed(e.getMessage());
+		}
+	}
+
+	public FindOrderNumberReponse findOrderNumber(FindOrderNumberRequest request) {
+		try {
+			String url = baseUrl + "/api/pp/find-orderNumbers";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient findOrderNumber url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient findOrderNumber response:{}", response);
+			if (StringUtils.isNotBlank(response)) {
+				return objectMapper.readValue(response, new TypeReference<FindOrderNumberReponse>() {
+				});
+			} else {
+				return FindOrderNumberReponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient batchConfirmOrder error :", e);
+			return FindOrderNumberReponse.failed(e.getMessage());
 		}
 	}
 }

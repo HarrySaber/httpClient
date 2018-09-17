@@ -41,6 +41,8 @@ import cn.starpost.tms.client.value.charge.GetOrderTransactionDetailRequest;
 import cn.starpost.tms.client.value.charge.GetOrderTransactionDetailResponse;
 import cn.starpost.tms.client.value.charge.QueryOrderChargeRequest;
 import cn.starpost.tms.client.value.charge.QueryOrderChargeResponse;
+import cn.starpost.tms.client.value.customer.FindCustomerRequest;
+import cn.starpost.tms.client.value.customer.FindCustomerResponse;
 import cn.starpost.tms.client.value.lastmilelabel.GetLastMileLabelRequest;
 import cn.starpost.tms.client.value.lastmilelabel.GetLastMileLabelResponse;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeRequest;
@@ -626,6 +628,30 @@ public class TmsClient {
 		} catch (Exception e) {
 			logger.error("TmsClient createParcelOrder error :", e);
 			return new CreateParcelOrderResponse(null, null, false, e.getMessage());
+		}
+	}
+	
+	/**
+	 * 获取客户对象
+	 * @param request
+	 * @return
+	 */
+	public FindCustomerResponse getOrgCustomer(FindCustomerRequest request) {
+		try {
+			String url = baseUrl + "/api/query/orgCustomer";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient getOrgCustomer url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient getOrgCustomer response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, FindCustomerResponse.class);
+			} else {
+				return FindCustomerResponse.faile("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient getOrgCustomer error :", e);
+			return FindCustomerResponse.faile(e.getMessage());
 		}
 	}
 }

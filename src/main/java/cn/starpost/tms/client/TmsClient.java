@@ -32,6 +32,9 @@ import cn.starpost.tms.client.utils.HttpClientUtil;
 import cn.starpost.tms.client.value.api.pp.FindOrderNumberReponse;
 import cn.starpost.tms.client.value.api.pp.FindOrderNumberRequest;
 import cn.starpost.tms.client.value.api.pp.FindParcelLabelReponse;
+import cn.starpost.tms.client.value.TmsClientResponse;
+import cn.starpost.tms.client.value.api.pp.EditExpressCodeRequest;
+import cn.starpost.tms.client.value.api.pp.FindExpressCodeResponse;
 import cn.starpost.tms.client.value.channel.FindChannelRequest;
 import cn.starpost.tms.client.value.channel.FindChannelResponse;
 import cn.starpost.tms.client.value.charge.FindChargeByOrderIdsRequest;
@@ -630,9 +633,10 @@ public class TmsClient {
 			return new CreateParcelOrderResponse(null, null, false, e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * 获取客户对象
+	 * 
 	 * @param request
 	 * @return
 	 */
@@ -652,6 +656,44 @@ public class TmsClient {
 		} catch (Exception e) {
 			logger.error("TmsClient getOrgCustomer error :", e);
 			return FindCustomerResponse.faile(e.getMessage());
+		}
+	}
+
+	public FindExpressCodeResponse findExpressCode(List<String> trackingNumbers) {
+		try {
+			String url = baseUrl + "/api/pp/find-express-code";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient findExpressCode url:{}", url);
+			String json = objectMapper.writeValueAsString(trackingNumbers);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient findExpressCode response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, FindExpressCodeResponse.class);
+			} else {
+				return FindExpressCodeResponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient findExpressCode error :", e);
+			return FindExpressCodeResponse.failed(e.getMessage());
+		}
+	}
+
+	public TmsClientResponse editExpressCode(EditExpressCodeRequest request) {
+		try {
+			String url = baseUrl + "/api/pp/edit-express-code";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient editExpressCode url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient editExpressCode response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, TmsClientResponse.class);
+			} else {
+				return TmsClientResponse.connectedFailed("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient editExpressCode error :", e);
+			return TmsClientResponse.connectedFailed(e.getMessage());
 		}
 	}
 }

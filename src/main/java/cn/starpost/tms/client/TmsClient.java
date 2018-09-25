@@ -81,6 +81,8 @@ import cn.starpost.tms.client.value.warehouse.FindWarehouseByIdRequest;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseByIdResponse;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseRequest;
 import cn.starpost.tms.client.value.warehouse.FindWarehouseResponse;
+import cn.starpost.tms.order.values.BatchCreateParcelOrderRequest;
+import cn.starpost.tms.order.values.BatchCreateParcelOrderResponse;
 import cn.starpost.tms.order.values.CreateParcelOrderRequest;
 import cn.starpost.tms.order.values.CreateParcelOrderResponse;
 
@@ -694,6 +696,26 @@ public class TmsClient {
 		} catch (Exception e) {
 			logger.error("TmsClient editExpressCode error :", e);
 			return TmsClientResponse.connectedFailed(e.getMessage());
+		}
+	}
+
+	public BatchCreateParcelOrderResponse batchCreateParcelOrder(BatchCreateParcelOrderRequest request) {
+		try {
+			String url = baseUrl + "/api/pp/orders";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient batchCreateParcelOrder url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient batchCreateParcelOrder response:{}", response);
+			if (StringUtils.isNotBlank(response)) {
+				return objectMapper.readValue(response, new TypeReference<BatchCreateParcelOrderResponse>() {
+				});
+			} else {
+				return new BatchCreateParcelOrderResponse(null, false, "response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient batchCreateParcelOrder error :", e);
+			return new BatchCreateParcelOrderResponse(null, false, e.getMessage());
 		}
 	}
 }

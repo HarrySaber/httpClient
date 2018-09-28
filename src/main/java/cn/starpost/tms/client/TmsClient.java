@@ -33,6 +33,7 @@ import cn.starpost.tms.client.value.api.pp.FindOrderNumberReponse;
 import cn.starpost.tms.client.value.api.pp.FindOrderNumberRequest;
 import cn.starpost.tms.client.value.api.pp.FindParcelLabelReponse;
 import cn.starpost.tms.client.value.TmsClientResponse;
+import cn.starpost.tms.client.value.api.BatchCreateApiOrderRequest;
 import cn.starpost.tms.client.value.api.pp.EditExpressCodeRequest;
 import cn.starpost.tms.client.value.api.pp.FindExpressCodeResponse;
 import cn.starpost.tms.client.value.channel.FindChannelRequest;
@@ -716,6 +717,26 @@ public class TmsClient {
 		} catch (Exception e) {
 			logger.error("TmsClient batchCreateParcelOrder error :", e);
 			return new BatchCreateParcelOrderResponse(null, false, e.getMessage());
+		}
+	}
+
+	public TmsClientResponse batchCreateApiOrder(BatchCreateApiOrderRequest request) {
+		try {
+			String url = baseUrl + "/api/pp/create-api-order";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient batchCreateApiOrder url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient batchCreateApiOrder response:{}", response);
+			if (StringUtils.isNotBlank(response)) {
+				return objectMapper.readValue(response, new TypeReference<TmsClientResponse>() {
+				});
+			} else {
+				return TmsClientResponse.connectedFailed("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient batchCreateApiOrder error :", e);
+			return TmsClientResponse.connectedFailed(e.getMessage());
 		}
 	}
 }

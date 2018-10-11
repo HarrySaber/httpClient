@@ -47,6 +47,10 @@ import cn.starpost.tms.client.value.charge.QueryOrderChargeRequest;
 import cn.starpost.tms.client.value.charge.QueryOrderChargeResponse;
 import cn.starpost.tms.client.value.customer.FindCustomerRequest;
 import cn.starpost.tms.client.value.customer.FindCustomerResponse;
+import cn.starpost.tms.client.value.customs.CustomsCheckRequest;
+import cn.starpost.tms.client.value.customs.CustomsEditRequest;
+import cn.starpost.tms.client.value.customs.CustomsQueryRequest;
+import cn.starpost.tms.client.value.customs.CustomsQueryResponse;
 import cn.starpost.tms.client.value.lastmilelabel.GetLastMileLabelRequest;
 import cn.starpost.tms.client.value.lastmilelabel.GetLastMileLabelResponse;
 import cn.starpost.tms.client.value.model.GetOrderNumberAndChannelCodeRequest;
@@ -787,6 +791,75 @@ public class TmsClient {
 			}
 		} catch (Exception e) {
 			logger.error("TmsClient AnewCalculatePriceEvent error :", e);
+			return TmsClientResponse.connectedFailed(e.getMessage());
+		}
+	}
+	/**
+	 * 客户端查询清关或报关公司分页数据
+	 * @param request
+	 * @return
+	 */
+	public CustomsQueryResponse getCustomsQueryPage(CustomsQueryRequest request) {
+		try {
+			String url = baseUrl + "/api/customs-getCustomsQueryPage";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient getCustomsQueryPage url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient getCustomsQueryPage response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, CustomsQueryResponse.class);
+			} else {
+				return CustomsQueryResponse.failed("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient getCustomsQueryPage error :", e);
+			return CustomsQueryResponse.failed(e.getMessage());
+		}
+	}
+	/**
+	 * 创建或编辑清关报关行
+	 * @param request
+	 * @return
+	 */
+	public TmsClientResponse customscreateAndModify(CustomsEditRequest request) {
+		try {
+			String url = baseUrl + "/api/customs-createAndModify";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient customscreateAndModify url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient customscreateAndModify response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, TmsClientResponse.class);
+			} else {
+				return TmsClientResponse.connectedFailed("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient customscreateAndModify error :", e);
+			return TmsClientResponse.connectedFailed(e.getMessage());
+		}
+	}
+	/**
+	 * 校验报关名清关名或电话
+	 * @param request
+	 * @return
+	 */
+	public TmsClientResponse customsCheck(CustomsCheckRequest request) {
+		try {
+			String url = baseUrl + "/api/customs-check";
+			ObjectMapper objectMapper = new ObjectMapper();
+			logger.info(">>>>TmsClient customsCheck url:{}", url);
+			String json = objectMapper.writeValueAsString(request);
+			String response = HttpClientUtil.doPost(url, json);
+			logger.info(">>>>TmsClient customsCheck response:{}", response);
+			if (!StringUtils.isBlank(response)) {
+				return objectMapper.readValue(response, TmsClientResponse.class);
+			} else {
+				return TmsClientResponse.connectedFailed("response is blank");
+			}
+		} catch (Exception e) {
+			logger.error("TmsClient customsCheck error :", e);
 			return TmsClientResponse.connectedFailed(e.getMessage());
 		}
 	}
